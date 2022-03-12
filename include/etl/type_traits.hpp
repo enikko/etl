@@ -1,7 +1,8 @@
 /**
  * @file type_traits.hpp
  *
- * @brief 
+ * @brief This file contains convenient type traits extensions to the
+ *        stl library type_traits
  *
  * @author Erik Nikko
  * Contact: 65210465+enikko@users.noreply.github.com
@@ -35,6 +36,7 @@
 
 namespace etl {
 
+/// @brief True if @p Iter has value type @p T.
 template<typename Iter, typename T>
 constexpr bool is_iterator_value_v = std::is_same_v<typename std::iterator_traits<Iter>::value_type, T>;
 
