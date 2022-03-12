@@ -99,9 +99,13 @@ private:
     /// @brief Increment the word ending in this node (i.e. this word was added to the trie).
     void increment_word() {
       std::apply(
-          [](auto& acc) {
-            if constexpr (has_increment_word_v<decltype(acc)>)
-              acc.increment_word();
+          [](auto&... accs) {
+            (
+                [](auto& acc) -> void {
+                  if constexpr (has_increment_word_v<decltype(acc)>)
+                    acc.increment_word();
+                }(accs),
+                ...);
           },
           accumulator);
     }
