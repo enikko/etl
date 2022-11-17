@@ -24,16 +24,31 @@ cmake_minimum_required(VERSION 3.10)
 
 project(etl_unit_test)
 
-find_package(etl CONFIG REQUIRED)
 enable_testing()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CPP_COMPILER g++)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-fno-omit-frame-pointer -fsanitize=signed-integer-overflow -fsanitize=undefined -fsanitize=bounds -fsanitize=float-divide-by-zero -fsanitize=integer-divide-by-zero -fsanitize=pointer-overflow -g -o2 -static -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wuseless-cast")
+set(CMAKE_CXX_FLAGS "-fno-omit-frame-pointer -fsanitize=signed-integer-overflow -fsanitize=undefined -fsanitize=bounds -fsanitize=float-divide-by-zero -fsanitize=integer-divide-by-zero -fsanitize=pointer-overflow -g -O2 -static -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wuseless-cast")
 
-add_executable(trie src/trie_test.cpp)
-target_link_libraries(trie etl::etl)
-add_test(
-  NAME trie_test
-  COMMAND trie)
+include_directories(../include)
+
+include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.1.1
+)
+FetchContent_MakeAvailable(Catch2)
+
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+include(CTest)
+include(Catch)
+
+add_executable(trie_test src/trie_test.cpp)
+target_link_libraries(trie_test PRIVATE Catch2::Catch2WithMain)
+catch_discover_tests(trie_test)
+
+add_executable(strong_type_test src/strong_type_test.cpp)
+target_link_libraries(strong_type_test PRIVATE Catch2::Catch2WithMain)
+catch_discover_tests(strong_type_test)

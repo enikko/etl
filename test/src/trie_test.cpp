@@ -30,43 +30,42 @@
  * SOFTWARE.
  **/
 
-#include <cassert>
-
 #include "etl/trie.hpp"
 
-int main() {
-  {
-    etl::Trie<> trie{};
-    trie.add("foo");
-    trie.add("bar");
-    trie.add("foo");
-    assert(std::get<etl::trie::word_count<>>(trie.get("foo")).count() == 2);
-    assert(std::get<etl::trie::word_count<>>(trie.get("bar")).count() == 1);
-    assert(std::get<etl::trie::word_count<>>(trie.get("foobar")).count() == 0);
-  }
-  {
-    etl::Trie<char, std::tuple<etl::trie::word_existence>> trie{};
-    trie.add("foo");
-    trie.add("bar");
-    trie.add("foo");
-    assert(std::get<etl::trie::word_existence>(trie.get("foo")).exist());
-    assert(std::get<etl::trie::word_existence>(trie.get("bar")).exist());
-    assert(!std::get<etl::trie::word_existence>(trie.get("foobar")).exist());
-  }
-  {
-    etl::Trie<char,
-              std::tuple<etl::trie::word_existence, etl::trie::word_count<>>>
-        trie{};
-    trie.add("foo");
-    trie.add("bar");
-    trie.add("foo");
-    assert(std::get<etl::trie::word_count<>>(trie.get("foo")).exist());
-    assert(std::get<etl::trie::word_count<>>(trie.get("bar")).exist());
-    assert(!std::get<etl::trie::word_count<>>(trie.get("foobar")).exist());
-    assert(std::begin(trie)->first == "bar");
-    assert(
-        std::get<etl::trie::word_count<>>(*std::begin(trie)->second).count() ==
+#include <cassert>
+#include <catch2/catch_test_macros.hpp>
+
+TEST_CASE("trie: default policy", "[trie]") {
+  etl::Trie<> trie{};
+  trie.add("foo");
+  trie.add("bar");
+  trie.add("foo");
+  CHECK(std::get<etl::trie::word_count<>>(trie.get("foo")).count() == 2);
+  CHECK(std::get<etl::trie::word_count<>>(trie.get("bar")).count() == 1);
+  CHECK(std::get<etl::trie::word_count<>>(trie.get("foobar")).count() == 0);
+}
+
+TEST_CASE("trie: word existence policy", "[trie]") {
+  etl::Trie<char, std::tuple<etl::trie::word_existence>> trie{};
+  trie.add("foo");
+  trie.add("bar");
+  trie.add("foo");
+  CHECK(std::get<etl::trie::word_existence>(trie.get("foo")).exist());
+  CHECK(std::get<etl::trie::word_existence>(trie.get("bar")).exist());
+  CHECK(!std::get<etl::trie::word_existence>(trie.get("foobar")).exist());
+}
+
+TEST_CASE("trie: word count policy", "[trie]") {
+  etl::Trie<char,
+            std::tuple<etl::trie::word_existence, etl::trie::word_count<>>>
+      trie{};
+  trie.add("foo");
+  trie.add("bar");
+  trie.add("foo");
+  CHECK(std::get<etl::trie::word_count<>>(trie.get("foo")).exist());
+  CHECK(std::get<etl::trie::word_count<>>(trie.get("bar")).exist());
+  CHECK(!std::get<etl::trie::word_count<>>(trie.get("foobar")).exist());
+  CHECK(std::begin(trie)->first == "bar");
+  CHECK(std::get<etl::trie::word_count<>>(*std::begin(trie)->second).count() ==
         1);
-  }
-  return 0;
 }
