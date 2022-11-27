@@ -1,8 +1,8 @@
 /**
- * @file This file contains an implementation of the trie data structure.a
+ * @file trie.hpp
+ * This file contains an implementation of the trie data structure.
  *
- * @author Erik Nikko
- * Contact: 65210465+enikko@users.noreply..com
+ * @author Erik Nikko <65210465+enikko@users.noreply.github.com>
  *
  **/
 
