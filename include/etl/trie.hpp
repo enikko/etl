@@ -31,6 +31,7 @@
  **/
 
 #include <map>
+#include <optional>
 #include <tuple>
 #include <vector>
 

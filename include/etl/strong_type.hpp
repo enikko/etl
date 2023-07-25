@@ -388,7 +388,7 @@ public:
                         has_op_v<st_op::arithmetic>)&&has_op_v<st_op::assign> &&
                            std::is_same_v<domain_t, other_marker>,
                        bool> = true>
-  domain_t& operator*=(const strong_type<other_marker, rep, ops...>& other) {
+  domain_t& operator%=(const strong_type<other_marker, rep, ops...>& other) {
     value_ %= other.value_;
     return *static_cast<domain_t*>(this);
   }
